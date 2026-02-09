@@ -1,0 +1,64 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      - '**.md'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'README.md'
+      - '**.md'
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          config-file: '.github/markdown-link-check-config.json'
+        continue-on-error: true
+
+      - name: Verify documentation structure
+        run: |
+          echo "Checking documentation files..."
+
+          if [ -f "README.md" ]; then
+            echo "✓ README.md exists"
+          else
+            echo "✗ README.md missing"
+            exit 1
+          fi
+
+          if [ -d "docs" ] && [ "$(find docs -name '*.md' 2>/dev/null | wc -l)" -gt 0 ]; then
+            echo "✓ docs/ exists with markdown files"
+          else
+            echo "✗ docs/ missing or empty"
+            exit 1
+          fi
+
+          if [ -f "tests/README.md" ]; then
+            echo "✓ tests/README.md exists"
+          else
+            echo "✗ tests/README.md missing"
+            exit 1
+          fi
+
+          echo "✓ All key documentation files exist"
+
+      - name: Count documentation files
+        run: |
+          echo "Documentation statistics:"
+          echo "- Markdown files: $(find . -name '*.md' 2>/dev/null | grep -v node_modules | wc -l)"
+          echo "- Documentation files in docs/: $(find docs/ -name '*.md' 2>/dev/null | wc -l || echo 0)"
+          echo "- Test files: $(find tests/ -name '*.py' 2>/dev/null | wc -l || echo 0)"

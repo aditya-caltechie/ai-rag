@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Environment variables
+.env
+
+# Personal artifacts
+.DS_Store
+
+# Vector store and preprocessed data (don't commit to GitHub)
+vector_db/
+preprocessed_db/
+src/rag-pipeline/vector_db/
+src/rag-pipeline/preprocessed_db/

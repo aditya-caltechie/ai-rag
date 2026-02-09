@@ -208,11 +208,11 @@ graph TB
 
 ## 🔗 Related Documentation
 
-- [Basic RAG Architecture](basic_rag_architecture.md) - Detailed basic flow
-- [Advanced RAG Architecture](advanced_rag_architecture.md) - Detailed advanced flow
-- [Architecture Comparison](architecture_comparison.md) - Side-by-side comparison
-- [Workflow Guide](workflow_guide.md) - How to use the system
-- [Complete Journey](complete_journey.md) - User journey map
+- [Basic RAG Architecture](2-basic_rag.md) - Detailed basic flow
+- [Advanced RAG Architecture](3-advanced_rag.md) - Detailed advanced flow
+- [Architecture Comparison](4-architecture_details.md#rag-implementation-comparison) - Side-by-side comparison
+- [Workflow Guide](8-workflow_guide.md) - How to use the system
+- [Complete Journey](1-demo.md) - User journey map
 
 ---
 ---

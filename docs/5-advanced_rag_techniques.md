@@ -838,10 +838,10 @@ graph TD
 - **Documentation**: `docs/`
 
 ### Further Reading
-- [System Architecture](architecture.md) - Complete system design
-- [Architecture Comparison](architecture_comparison.md) - Side-by-side analysis
-- [RAG vs Pro](rag_vs_pro.md) - Detailed feature comparison
-- [Workflow Guide](workflow_guide.md) - Implementation instructions
+- [System Architecture](4-architecture_details.md) - Complete system design
+- [Architecture Comparison](4-architecture_details.md#rag-implementation-comparison) - Side-by-side analysis
+- [RAG vs Pro](4-architecture_details.md#rag-implementation-comparison) - Detailed feature comparison
+- [Workflow Guide](8-workflow_guide.md) - Implementation instructions
 
 ---
 

@@ -328,10 +328,10 @@ Our evaluation framework demonstrates that advanced RAG techniques deliver **mea
 
 ## 📚 Related Documentation
 
-- [Workflow Guide](workflow_guide.md) - How to run evaluations
-- [Advanced RAG Techniques](advancedRagTechniques.md) - What techniques are implemented
-- [Architecture Comparison](architecture_comparison.md) - Technical analysis
-- [Demo Results](demo.md) - Live UI comparison with screenshots
+- [Workflow Guide](8-workflow_guide.md) - How to run evaluations
+- [Advanced RAG Techniques](5-advanced_rag_techniques.md) - What techniques are implemented
+- [Architecture Comparison](4-architecture_details.md#rag-implementation-comparison) - Technical analysis
+- [Demo Results](1-demo.md) - Live UI comparison with screenshots
 
 ---
 

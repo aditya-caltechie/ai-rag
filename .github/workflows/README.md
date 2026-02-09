@@ -81,9 +81,9 @@ Workflows use default environment variables. Tests don't require API keys as the
 Add these badges to your README:
 
 ```markdown
-![Tests](https://github.com/YOUR_USERNAME/ai-advance-rag/actions/workflows/test.yml/badge.svg)
-![Code Quality](https://github.com/YOUR_USERNAME/ai-advance-rag/actions/workflows/lint.yml/badge.svg)
-![CI/CD](https://github.com/YOUR_USERNAME/ai-advance-rag/actions/workflows/ci.yml/badge.svg)
+![Tests](https://github.com/aditya-caltechie/ai-rag/actions/workflows/test.yml/badge.svg)
+![Code Quality](https://github.com/aditya-caltechie/ai-rag/actions/workflows/lint.yml/badge.svg)
+![CI/CD](https://github.com/aditya-caltechie/ai-rag/actions/workflows/ci.yml/badge.svg)
 ```
 
 ## Local Testing

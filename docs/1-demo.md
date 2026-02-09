@@ -456,11 +456,11 @@ The advanced RAG implementation demonstrates significant improvements in retriev
 
 ## 📚 Additional Resources
 
-- [Complete Workflow Guide](workflow_guide.md) - Detailed implementation steps
-- [Architecture Comparison](architecture_comparison.md) - Technical deep dive
-- [RAG vs Pro Comparison](rag_vs_pro.md) - Feature-by-feature analysis
-- [Advanced RAG Techniques](advancedRagTechniques.md) - Techniques explained
-- [Switching Guide](SWITCHING.md) - How to switch between modes
+- [Complete Workflow Guide](8-workflow_guide.md) - Detailed implementation steps
+- [Architecture Comparison](4-architecture_details.md#rag-implementation-comparison) - Technical deep dive
+- [RAG vs Pro Comparison](4-architecture_details.md#rag-implementation-comparison) - Feature-by-feature analysis
+- [Advanced RAG Techniques](5-advanced_rag_techniques.md) - Techniques explained
+- [Workflow Guide](8-workflow_guide.md) - How to switch between modes
 
 ---
 

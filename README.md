@@ -16,8 +16,6 @@ This project contains:
 
 ## 📊 Project Workflow
 
-**Visual Journey**: See the [Complete RAG Evolution Journey](docs/complete_journey.md) for a visual roadmap
-
 ### Phase 1: Basic RAG Implementation
 
 ```mermaid
@@ -54,7 +52,7 @@ graph TD
 
 ### Basic RAG Architecture
 
-See detailed architecture: [Basic RAG Architecture](docs/basic_rag_architecture.md)
+See detailed architecture: [Basic RAG Architecture](docs/2-basic_rag.md)
 
 **Key Characteristics:**
 - Simple rule-based chunking (500 chars, 200 overlap)
@@ -64,7 +62,7 @@ See detailed architecture: [Basic RAG Architecture](docs/basic_rag_architecture.
 
 ### Advanced RAG Architecture  
 
-See detailed architecture: [Advanced RAG Architecture](docs/advanced_rag_architecture.md)
+See detailed architecture: [Advanced RAG Architecture](docs/3-advanced_rag.md)
 
 **Key Characteristics:**
 - LLM-powered semantic chunking with metadata
@@ -87,7 +85,7 @@ See detailed architecture: [Advanced RAG Architecture](docs/advanced_rag_archite
 
 ## 🚀 Quick Start
 
-**For detailed step-by-step instructions, see the [Complete Workflow Guide](docs/workflow_guide.md)**
+**For detailed step-by-step instructions, see the [Complete Workflow Guide](docs/8-workflow_guide.md)**
 
 ### Step 1: Setup Environment
 
@@ -147,7 +145,7 @@ No need to manually edit imports! Just change `RAG_MODE` in your `.env` file:
 - `RAG_MODE=basic` → Uses `implementation/`
 - `RAG_MODE=pro` → Uses `pro_implementation/`
 
-See [Switching Guide](docs/SWITCHING.md) for details.
+See [Workflow Guide](docs/8-workflow_guide.md) for mode switching details.
 
 ---
 

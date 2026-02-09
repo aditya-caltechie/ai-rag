@@ -1,4 +1,8 @@
-# Advanced RAG Pipeline - Implementation & Evaluation
+## Advanced RAG Pipeline 
+Implementation & Evaluation
+
+[![CI](https://github.com/aditya-caltechie/ai-rag/workflows/CI/badge.svg)](https://github.com/aditya-caltechie/ai-rag/actions)
+
 
 This repository demonstrates the evolution from **Basic RAG** to **Advanced RAG** with comprehensive evaluation metrics.
 

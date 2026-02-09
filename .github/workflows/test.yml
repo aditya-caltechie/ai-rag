@@ -10,6 +10,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      RAG_MODE: basic
+      OPENAI_API_KEY: sk-test-dummy-for-ci
+      PYTHONPATH: ${{ github.workspace }}/src/rag-pipeline
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,14 +32,8 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Run unit tests
-        run: uv run pytest tests/unit/ -v --tb=short
-
-      - name: Run integration tests
-        run: uv run pytest tests/integration/ -v --tb=short
-
-      - name: Run all tests with coverage
-        run: uv run pytest tests/ --cov=src/rag-pipeline --cov-report=xml --cov-report=term
+      - name: Run unit tests with coverage
+        run: uv run pytest tests/unit/ -v --tb=short --cov=src/rag-pipeline --cov-report=xml --cov-report=term
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

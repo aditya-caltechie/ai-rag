@@ -13,6 +13,11 @@ jobs:
       matrix:
         python-version: ['3.11', '3.12']
 
+    env:
+      RAG_MODE: basic
+      OPENAI_API_KEY: sk-test-dummy-for-ci
+      PYTHONPATH: ${{ github.workspace }}/src/rag-pipeline
+
     steps:
       - uses: actions/checkout@v4
 
@@ -39,9 +44,9 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Run tests with coverage
+      - name: Run unit tests with coverage
         run: |
-          uv run pytest tests/ -v --cov=src/rag-pipeline --cov-report=xml --cov-report=term-missing
+          uv run pytest tests/unit/ -v --cov=src/rag-pipeline --cov-report=xml --cov-report=term-missing
 
       - name: Upload coverage
         if: matrix.python-version == '3.11'

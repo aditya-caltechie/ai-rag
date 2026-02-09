@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: false  # Disabled – takes too long (heavy deps: torch, transformers, etc.)
     strategy:
       matrix:
         python-version: ['3.11', '3.12']

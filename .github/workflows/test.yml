@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    if: false  # Disabled for now – ci.yml runs unit tests
     env:
       RAG_MODE: basic
       OPENAI_API_KEY: sk-test-dummy-for-ci

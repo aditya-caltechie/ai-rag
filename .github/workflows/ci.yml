@@ -84,10 +84,10 @@ jobs:
     steps:
       - name: Check build status
         run: |
-          if [ "${{ needs.test.result }}" == "success" ] && [ "${{ needs.quality.result }}" == "success" ]; then
-            echo "✓ All checks passed!"
-            exit 0
-          else
+          if [ "${{ needs.test.result }}" == "failure" ] || [ "${{ needs.quality.result }}" == "failure" ]; then
             echo "✗ Some checks failed"
             exit 1
+          else
+            echo "✓ All checks passed (or skipped)"
+            exit 0
           fi

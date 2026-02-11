@@ -1,4 +1,5 @@
 
+# Scalibility and Productionization of RAG
 
 ## RAG = Retrieval-Augmented Generation
 
@@ -157,7 +158,8 @@ To make this design production-ready, focus on these pillars:
 | Security | AuthZ, PII redaction, prompt injection guards (Nemo Guardrails). Data encryption. | Exposed APIs without rate limits. |
 | Eval & Iteration | Offline golden datasets + online A/B testing. Tools: RAGAS for metrics. | Flying blind without monitoring. |
 
-#### scalable production RAG system design (Kubernetes-centric, with emphasis on scaling, efficiency, and low-hallucination UX). It captures the main components and data flows we discussed earlier.
+
+Scalable production RAG system design (Kubernetes-centric, with emphasis on scaling, efficiency, and low-hallucination UX). It captures the main components and data flows we discussed earlier.
 
 ```
                                  +------------------------+  
@@ -241,7 +243,9 @@ Parallel / Scaling Layers:
 - Hallucination mitigation → Strict prompt + reranking + faithfulness eval in monitoring loop + "I don't know" fallback
 
 
-#### updated ASCII diagram with explicit guardrail layers marked in the production RAG pipeline. I've placed them exactly where they typically sit in real-world deployments (defense-in-depth style), connecting back to our earlier conversation on scaling, hallucination reduction, efficiency, and UX.
+
+Updated ASCII diagram with explicit guardrail layers marked in the production RAG pipeline. I've placed them exactly where they typically sit in real-world deployments (defense-in-depth style), connecting back to our earlier conversation on scaling, hallucination reduction, efficiency, and UX.
+
 
 ```
                                  +---------------------+  

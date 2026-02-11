@@ -268,13 +268,13 @@ cp .env.example .env
 # 2. For Basic RAG
 echo "RAG_MODE=basic" >> .env
 cd src/rag-pipeline
-uv run implementation/ingest.py
+uv run implementation/ingestion.py
 uv run evaluator.py
 # Click "Run Evaluation" in browser
 
 # 3. For Advanced RAG
 echo "RAG_MODE=pro" >> .env
-uv run pro_implementation/ingest.py
+uv run pro_implementation/ingestion.py
 uv run evaluator.py
 # Click "Run Evaluation" in browser
 

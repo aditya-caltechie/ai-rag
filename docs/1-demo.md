@@ -22,7 +22,7 @@ OPENAI_API_KEY=your_key_here
 
 #### Step 3: Ingest Documents (Basic)
 ```bash
-$ uv run src/rag-pipeline/implementation/ingest.py
+$ uv run src/rag-pipeline/implementation/ingestion.py
 
 Starting RAG ingestion pipeline...
 [Step 1/3] Loading documents from knowledge base...
@@ -88,7 +88,7 @@ RAG_MODE=pro
 
 #### Step 2: Ingest Documents (Advanced)
 ```bash
-$ uv run src/rag-pipeline/pro_implementation/ingest.py
+$ uv run src/rag-pipeline/pro_implementation/ingestion.py
 
 Loaded 76 documents
 100%|████████████████████████████| 76/76 [03:45<00:00, 2.96s/it]
@@ -347,7 +347,7 @@ uv run evaluator.py
 # Edit .env: Change RAG_MODE=basic to RAG_MODE=pro
 
 # Step 2: Ingest with Advanced Techniques
-uv run pro_implementation/ingest.py
+uv run pro_implementation/ingestion.py
 # Output: 76 docs → 521 chunks → preprocessed_db/
 # Takes ~3-4 minutes
 

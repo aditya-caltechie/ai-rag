@@ -35,12 +35,12 @@ ai-advance-rag/
     ├── evaluator.py                 # Gradio evaluation dashboard
     │
     ├── implementation/              # Basic RAG
-    │   ├── ingest.py               # Rule-based chunking
-    │   └── answer.py               # Single-query retrieval
+    │   ├── ingestion.py             # Rule-based chunking
+    │   └── inference.py             # Single-query retrieval
     │
     ├── pro_implementation/          # Advanced RAG
-    │   ├── ingest.py               # LLM-powered chunking
-    │   └── answer.py               # Multi-stage retrieval
+    │   ├── ingestion.py             # LLM-powered chunking
+    │   └── inference.py             # Multi-stage retrieval
     │
     ├── evaluation/                  # Evaluation framework
     │   ├── eval.py                 # Metrics calculation (MRR, nDCG)
@@ -72,26 +72,26 @@ Notes:
 
 #### Basic RAG Implementation
 
-- **Ingestion**: `src/rag-pipeline/implementation/ingest.py`
+- **Ingestion**: `src/rag-pipeline/implementation/ingestion.py`
   - Loads markdown documents from `knowledge-base/`
   - Splits using `RecursiveCharacterTextSplitter` (500 chars, 200 overlap)
   - Creates embeddings with OpenAI `text-embedding-3-large`
   - Stores in ChromaDB (`vector_db/`)
 
-- **Query pipeline**: `src/rag-pipeline/implementation/answer.py`
+- **Query pipeline**: `src/rag-pipeline/implementation/inference.py`
   - Retrieves top K=10 chunks via cosine similarity
   - Combines with conversation history
   - Generates answer using `ChatOpenAI(model="gpt-4.1-nano")`
 
 #### Advanced RAG Implementation
 
-- **Ingestion**: `src/rag-pipeline/pro_implementation/ingest.py`
+- **Ingestion**: `src/rag-pipeline/pro_implementation/ingestion.py`
   - LLM intelligently chunks documents with semantic understanding
   - Each chunk gets: `headline` + `summary` + `original_text`
   - Parallel processing with multiprocessing.Pool
   - Stores enhanced chunks in ChromaDB (`preprocessed_db/`)
 
-- **Query pipeline**: `src/rag-pipeline/pro_implementation/answer.py`
+- **Query pipeline**: `src/rag-pipeline/pro_implementation/inference.py`
   - **Step 1**: LLM rewrites query for better retrieval
   - **Step 2**: Dual retrieval (original + rewritten query, K=20 each)
   - **Step 3**: Merge and deduplicate chunks
@@ -149,7 +149,7 @@ cd src/rag-pipeline
 # Set RAG_MODE=basic in .env
 
 # Ingest documents
-uv run implementation/ingest.py
+uv run implementation/ingestion.py
 
 # Launch chatbot
 uv run app.py
@@ -166,7 +166,7 @@ cd src/rag-pipeline
 # Set RAG_MODE=pro in .env
 
 # Ingest with LLM chunking (slower, ~3-5 min for 76 docs)
-uv run pro_implementation/ingest.py
+uv run pro_implementation/ingestion.py
 
 # Launch chatbot (automatically uses pro mode)
 uv run app.py

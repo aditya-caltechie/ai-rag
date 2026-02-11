@@ -19,7 +19,7 @@ uv sync
 ```bash
 # Step 1: Ingest documents with basic chunking
 cd src/rag-pipeline
-uv run implementation/ingest.py
+uv run implementation/ingestion.py
 
 # Expected output:
 # Starting RAG ingestion pipeline...
@@ -71,7 +71,7 @@ uv run evaluator.py
 
 ```bash
 # Step 1: Ingest with advanced techniques
-uv run pro_implementation/ingest.py
+uv run pro_implementation/ingestion.py
 
 # Expected output:
 # Loaded 25 documents
@@ -103,8 +103,8 @@ uv run app.py
 ```bash
 # Step 3: Update evaluator.py imports
 # Edit evaluation/eval.py imports:
-# Change: from implementation.answer import answer_question, fetch_context
-# To:     from pro_implementation.answer import answer_question, fetch_context
+# Change: from implementation.inference import answer_question, fetch_context
+# To:     from pro_implementation.inference import answer_question, fetch_context
 
 # Run evaluation
 uv run evaluator.py
@@ -182,7 +182,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 chunks = text_splitter.split_documents(documents)
 # Result: 180 simple text chunks
 
-# Advanced RAG (pro_implementation/ingest.py)
+# Advanced RAG (pro_implementation/ingestion.py)
 # LLM processes each document
 response = completion(
     model=MODEL,
@@ -201,7 +201,7 @@ def answer_question(question, history):
     # Build prompt and generate answer
     return answer, chunks
 
-# Advanced RAG (pro_implementation/answer.py)
+# Advanced RAG (pro_implementation/inference.py)
 def answer_question(question, history):
     rewritten = rewrite_query(question)           # LLM rewrite
     chunks1 = fetch_context(question)             # Search #1

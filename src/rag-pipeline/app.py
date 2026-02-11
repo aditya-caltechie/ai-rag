@@ -17,10 +17,10 @@ from config import RAG_MODE
 
 # Dynamically import the answer function based on RAG_MODE
 if RAG_MODE == "basic":
-    from implementation.answer import answer_question
+    from implementation.inference import answer_question
     print("✓ Using Basic RAG (implementation/)")
 elif RAG_MODE == "pro":
-    from pro_implementation.answer import answer_question
+    from pro_implementation.inference import answer_question
     print("✓ Using Advanced RAG (pro_implementation/)")
 else:
     raise ValueError(f"Invalid RAG_MODE: {RAG_MODE}")

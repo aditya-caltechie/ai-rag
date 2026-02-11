@@ -1,5 +1,5 @@
 """
-Unit tests for advanced RAG ingestion pipeline (pro_implementation/ingest.py).
+Unit tests for advanced RAG ingestion pipeline (pro_implementation/ingestion.py).
 
 Tests LLM-powered chunking, parallel processing, and enhanced embedding creation.
 """
@@ -12,8 +12,8 @@ import sys
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src" / "rag-pipeline"))
 
-from pro_implementation import ingest
-from pro_implementation.ingest import Chunk, Chunks, Result
+from pro_implementation import ingestionion
+from pro_implementation.ingestion import Chunk, Chunks, Result
 
 
 class TestPydanticModels:
@@ -125,7 +125,7 @@ class TestMakePrompt:
 class TestProcessDocument:
     """Test LLM-powered document processing."""
     
-    @patch('pro_implementation.ingest.completion')
+    @patch('pro_implementation.ingestion.completion')
     def test_process_document_returns_results(self, mock_completion):
         """Test that process_document returns list of Results."""
         # Mock LLM response
@@ -157,7 +157,7 @@ class TestProcessDocument:
         assert len(results) > 0
         assert isinstance(results[0], Result)
     
-    @patch('pro_implementation.ingest.completion')
+    @patch('pro_implementation.ingestion.completion')
     def test_process_document_preserves_metadata(self, mock_completion):
         """Test that processed chunks preserve document metadata."""
         mock_response = Mock()
@@ -191,8 +191,8 @@ class TestProcessDocument:
 class TestCreateChunks:
     """Test parallel document processing."""
     
-    @patch('pro_implementation.ingest.Pool')
-    @patch('pro_implementation.ingest.process_document')
+    @patch('pro_implementation.ingestion.Pool')
+    @patch('pro_implementation.ingestion.process_document')
     def test_create_chunks_uses_multiprocessing(self, mock_process, mock_pool_class):
         """Test that create_chunks uses multiprocessing pool."""
         # Mock process_document to return sample results
@@ -216,7 +216,7 @@ class TestCreateChunks:
         assert len(chunks) >= 2
         mock_pool_class.assert_called_once()
     
-    @patch('pro_implementation.ingest.Pool')
+    @patch('pro_implementation.ingestion.Pool')
     def test_create_chunks_flattens_results(self, mock_pool_class):
         """Test that create_chunks flattens nested results."""
         # Mock pool to return nested results
@@ -240,8 +240,8 @@ class TestCreateChunks:
 class TestCreateEmbeddings:
     """Test embedding creation with ChromaDB."""
     
-    @patch('pro_implementation.ingest.PersistentClient')
-    @patch('pro_implementation.ingest.openai')
+    @patch('pro_implementation.ingestion.PersistentClient')
+    @patch('pro_implementation.ingestion.openai')
     def test_create_embeddings_deletes_existing_collection(self, mock_openai, mock_client_class):
         """Test that existing collection is deleted."""
         # Mock ChromaDB client
@@ -260,12 +260,12 @@ class TestCreateEmbeddings:
         
         chunks = [Result(page_content="Test", metadata={"source": "test.md"})]
         
-        ingest.create_embeddings(chunks)
+        ingestion.create_embeddings(chunks)
         
         mock_client.delete_collection.assert_called_once_with("docs")
     
-    @patch('pro_implementation.ingest.PersistentClient')
-    @patch('pro_implementation.ingest.openai')
+    @patch('pro_implementation.ingestion.PersistentClient')
+    @patch('pro_implementation.ingestion.openai')
     def test_create_embeddings_calls_openai(self, mock_openai, mock_client_class):
         """Test that OpenAI embeddings API is called."""
         # Mock ChromaDB
@@ -289,7 +289,7 @@ class TestCreateEmbeddings:
             Result(page_content="Chunk 3", metadata={"source": "test3.md"})
         ]
         
-        ingest.create_embeddings(chunks)
+        ingestion.create_embeddings(chunks)
         
         # Verify OpenAI was called with correct model and texts
         mock_openai.embeddings.create.assert_called_once()
@@ -297,8 +297,8 @@ class TestCreateEmbeddings:
         assert call_kwargs["model"] == "text-embedding-3-large"
         assert len(call_kwargs["input"]) == 3
     
-    @patch('pro_implementation.ingest.PersistentClient')
-    @patch('pro_implementation.ingest.openai')
+    @patch('pro_implementation.ingestion.PersistentClient')
+    @patch('pro_implementation.ingestion.openai')
     def test_create_embeddings_stores_in_chromadb(self, mock_openai, mock_client_class):
         """Test that embeddings are stored in ChromaDB collection."""
         # Mock setup
@@ -319,7 +319,7 @@ class TestCreateEmbeddings:
             Result(page_content="C2", metadata={"source": "s2.md"})
         ]
         
-        ingest.create_embeddings(chunks)
+        ingestion.create_embeddings(chunks)
         
         # Verify collection.add was called
         mock_collection.add.assert_called_once()

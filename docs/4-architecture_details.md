@@ -17,7 +17,7 @@ graph TB
     end
     
     subgraph "Ingestion Pipeline"
-        KB --> INGEST[Run ingest.py]
+        KB --> INGEST[Run ingestion.py]
         BASIC --> INGEST
         ADV --> INGEST
         INGEST --> VDB[(Vector Database<br/>ChromaDB)]
@@ -28,7 +28,7 @@ graph TB
     end
     
     subgraph "Query Pipeline"
-        UI --> ANSWER[answer.py]
+        UI --> ANSWER[inference.py]
         VDB -.->|Retrieve| ANSWER
         ANSWER --> LLM[🤖 LLM Generation]
         LLM --> RESPONSE[Answer + Context]
@@ -69,7 +69,7 @@ sequenceDiagram
     
     Note over Admin,Ingest: Phase 1: Setup
     Admin->>Docs: Add/Update Documents
-    Admin->>Ingest: Run ingest.py
+    Admin->>Ingest: Run ingestion.py
     Ingest->>Docs: Load Documents
     Ingest->>Ingest: Chunk & Process
     Ingest->>VDB: Store Embeddings
@@ -167,8 +167,8 @@ graph TB
         PROCESS --> BACKEND[answer_question]
         
         BACKEND --> IMPL{Which Implementation?}
-        IMPL -->|Basic| B_ANSWER[implementation/answer.py]
-        IMPL -->|Advanced| A_ANSWER[pro_implementation/answer.py]
+        IMPL -->|Basic| B_ANSWER[implementation/inference.py]
+        IMPL -->|Advanced| A_ANSWER[pro_implementation/inference.py]
         
         B_ANSWER --> RESULT[Result Handler]
         A_ANSWER --> RESULT
@@ -234,7 +234,7 @@ This document compares the **Basic** (`implementation/`) vs **Pro** (`pro_implem
 
 ## Ingestion Pipeline Comparison
 
-### `ingest.py` Differences
+### `ingestion.py` Differences
 
 #### Basic Implementation
 ```
@@ -272,7 +272,7 @@ Load Docs → LLM-Powered Split → Enhanced Chunks → Generate Embeddings → 
 
 ## Answer Pipeline Comparison
 
-### `answer.py` Differences
+### `inference.py` Differences
 
 #### Basic Implementation
 ```

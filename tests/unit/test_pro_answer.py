@@ -1,5 +1,5 @@
 """
-Unit tests for advanced RAG answer pipeline (pro_implementation/answer.py).
+Unit tests for advanced RAG answer pipeline (pro_implementation/inference.py).
 
 Tests query rewriting, dual retrieval, LLM reranking, and answer generation.
 """
@@ -12,8 +12,8 @@ import sys
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src" / "rag-pipeline"))
 
-from pro_implementation import answer
-from pro_implementation.answer import Result, RankOrder
+from pro_implementation import inference
+from pro_implementation.inference import Result, RankOrder
 
 
 class TestPydanticModels:
@@ -40,7 +40,7 @@ class TestPydanticModels:
 class TestRewriteQuery:
     """Test query rewriting functionality."""
     
-    @patch('pro_implementation.answer.completion')
+    @patch('pro_implementation.inference.completion')
     def test_rewrite_query_calls_llm(self, mock_completion):
         """Test that rewrite_query calls LLM."""
         mock_response = Mock()
@@ -52,7 +52,7 @@ class TestRewriteQuery:
         assert result == "rewritten query"
         mock_completion.assert_called_once()
     
-    @patch('pro_implementation.answer.completion')
+    @patch('pro_implementation.inference.completion')
     def test_rewrite_query_with_history(self, mock_completion):
         """Test that rewrite_query uses conversation history."""
         mock_response = Mock()
@@ -74,8 +74,8 @@ class TestRewriteQuery:
 class TestFetchContextUnranked:
     """Test basic retrieval functionality."""
     
-    @patch('pro_implementation.answer.collection')
-    @patch('pro_implementation.answer.openai')
+    @patch('pro_implementation.inference.collection')
+    @patch('pro_implementation.inference.openai')
     def test_fetch_context_unranked_returns_results(self, mock_openai, mock_collection):
         """Test that fetch_context_unranked returns list of Results."""
         # Mock OpenAI embedding
@@ -95,8 +95,8 @@ class TestFetchContextUnranked:
         assert isinstance(results[0], Result)
         assert results[0].page_content == "Doc 1"
     
-    @patch('pro_implementation.answer.collection')
-    @patch('pro_implementation.answer.openai')
+    @patch('pro_implementation.inference.collection')
+    @patch('pro_implementation.inference.openai')
     def test_fetch_context_unranked_uses_correct_k(self, mock_openai, mock_collection):
         """Test that retrieval uses RETRIEVAL_K."""
         mock_embedding = Mock()
@@ -108,7 +108,7 @@ class TestFetchContextUnranked:
             "metadatas": [[]]
         })
         
-        answer.fetch_context_unranked("test")
+        inference.fetch_context_unranked("test")
         
         # Verify n_results parameter
         call_kwargs = mock_collection.query.call_args.kwargs
@@ -152,7 +152,7 @@ class TestMergeChunks:
 class TestRerank:
     """Test LLM-based reranking."""
     
-    @patch('pro_implementation.answer.completion')
+    @patch('pro_implementation.inference.completion')
     def test_rerank_returns_reordered_chunks(self, mock_completion):
         """Test that rerank returns chunks in new order."""
         mock_response = Mock()
@@ -172,7 +172,7 @@ class TestRerank:
         assert reranked[1].page_content == "Chunk 1"
         assert reranked[2].page_content == "Chunk 3"
     
-    @patch('pro_implementation.answer.completion')
+    @patch('pro_implementation.inference.completion')
     def test_rerank_includes_question_in_prompt(self, mock_completion):
         """Test that question is passed to reranking LLM."""
         mock_response = Mock()
@@ -182,7 +182,7 @@ class TestRerank:
         question = "Who is the CEO?"
         chunks = [Result(page_content="Test", metadata={})]
         
-        answer.rerank(question, chunks)
+        inference.rerank(question, chunks)
         
         # Verify question appears in the call
         call_args = mock_completion.call_args
@@ -192,9 +192,9 @@ class TestRerank:
 class TestFetchContext:
     """Test multi-stage retrieval pipeline."""
     
-    @patch('pro_implementation.answer.rerank')
-    @patch('pro_implementation.answer.fetch_context_unranked')
-    @patch('pro_implementation.answer.rewrite_query')
+    @patch('pro_implementation.inference.rerank')
+    @patch('pro_implementation.inference.fetch_context_unranked')
+    @patch('pro_implementation.inference.rewrite_query')
     def test_fetch_context_uses_dual_retrieval(self, mock_rewrite, mock_fetch, mock_rerank):
         """Test that fetch_context retrieves with both original and rewritten queries."""
         mock_rewrite.return_value = "rewritten query"
@@ -213,9 +213,9 @@ class TestFetchContext:
         assert mock_fetch.call_args_list[0][0][0] == "original question"
         assert mock_fetch.call_args_list[1][0][0] == "rewritten query"
     
-    @patch('pro_implementation.answer.rerank')
-    @patch('pro_implementation.answer.fetch_context_unranked')
-    @patch('pro_implementation.answer.rewrite_query')
+    @patch('pro_implementation.inference.rerank')
+    @patch('pro_implementation.inference.fetch_context_unranked')
+    @patch('pro_implementation.inference.rewrite_query')
     def test_fetch_context_returns_top_k(self, mock_rewrite, mock_fetch, mock_rerank):
         """Test that fetch_context returns top FINAL_K chunks."""
         mock_rewrite.return_value = "rewritten"
@@ -279,8 +279,8 @@ class TestMakeRagMessages:
 class TestAnswerQuestion:
     """Test complete answer generation pipeline."""
     
-    @patch('pro_implementation.answer.completion')
-    @patch('pro_implementation.answer.fetch_context')
+    @patch('pro_implementation.inference.completion')
+    @patch('pro_implementation.inference.fetch_context')
     def test_answer_question_returns_tuple(self, mock_fetch, mock_completion):
         """Test that answer_question returns (answer, chunks) tuple."""
         mock_fetch.return_value = [Result(page_content="Context", metadata={})]
@@ -296,8 +296,8 @@ class TestAnswerQuestion:
         assert result[0] == "Answer"
         assert isinstance(result[1], list)
     
-    @patch('pro_implementation.answer.completion')
-    @patch('pro_implementation.answer.fetch_context')
+    @patch('pro_implementation.inference.completion')
+    @patch('pro_implementation.inference.fetch_context')
     def test_answer_question_uses_advanced_retrieval(self, mock_fetch, mock_completion):
         """Test that answer_question uses fetch_context (not basic retrieval)."""
         mock_chunks = [Result(page_content="Advanced context", metadata={"source": "s.md"})]
@@ -312,8 +312,8 @@ class TestAnswerQuestion:
         mock_fetch.assert_called_once_with("Test question")
         assert chunks == mock_chunks
     
-    @patch('pro_implementation.answer.completion')
-    @patch('pro_implementation.answer.fetch_context')
+    @patch('pro_implementation.inference.completion')
+    @patch('pro_implementation.inference.fetch_context')
     def test_answer_question_with_history(self, mock_fetch, mock_completion):
         """Test that answer_question passes history to LLM."""
         mock_fetch.return_value = [Result(page_content="C", metadata={})]
@@ -324,7 +324,7 @@ class TestAnswerQuestion:
         
         history = [{"role": "user", "content": "Previous"}]
         
-        answer.answer_question("Current", history)
+        inference.answer_question("Current", history)
         
         # Verify completion was called with messages including history
         call_args = mock_completion.call_args

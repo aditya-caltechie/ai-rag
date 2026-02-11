@@ -20,7 +20,7 @@ This project contains:
 
 ```mermaid
 graph TD
-    A[1. Run implementation/ingest.py] --> B[Build Vector DB with Basic Chunking]
+    A[1. Run implementation/ingestion.py] --> B[Build Vector DB with Basic Chunking]
     B --> C[2. Run app.py with implementation]
     C --> D[Test Basic RAG System]
     D --> E[3. Run evaluator.py with implementation]
@@ -35,7 +35,7 @@ graph TD
 
 ```mermaid
 graph TD
-    A[1. Run pro_implementation/ingest.py] --> B[Build Vector DB with LLM Chunking<br/>+ Headlines + Summaries]
+    A[1. Run pro_implementation/ingestion.py] --> B[Build Vector DB with LLM Chunking<br/>+ Headlines + Summaries]
     B --> C[2. Run app.py with pro_implementation]
     C --> D[Test Advanced RAG System<br/>Query Rewrite + Dual Retrieval + Reranking]
     D --> E[3. Run evaluator.py with pro_implementation]
@@ -108,7 +108,7 @@ cd src/rag-pipeline
 # RAG_MODE=basic
 
 # 1. Ingest documents (basic chunking)
-uv run implementation/ingest.py
+uv run implementation/ingestion.py
 
 # 2. Launch UI (automatically uses mode from .env)
 uv run app.py
@@ -126,7 +126,7 @@ uv run evaluator.py
 # RAG_MODE=pro
 
 # 1. Ingest with advanced chunking
-uv run pro_implementation/ingest.py
+uv run pro_implementation/ingestion.py
 
 # 2. Launch UI (automatically switches to pro mode)
 uv run app.py

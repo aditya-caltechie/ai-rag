@@ -2,13 +2,13 @@
 
 ```mermaid
 graph TB
-    subgraph "INGESTION PHASE (implementation/ingest.py)"
+    subgraph "INGESTION PHASE (implementation/ingestion.py)"
         A[📄 Load Documents<br/>Markdown Files] --> B[✂️ Text Chunking<br/>RecursiveCharacterTextSplitter<br/>chunk_size=500, overlap=200]
         B --> C[🧮 Generate Embeddings<br/>OpenAI text-embedding-3-large]
         C --> D[💾 Store in ChromaDB<br/>vector_db/]
     end
     
-    subgraph "QUERY PHASE (implementation/answer.py)"
+    subgraph "QUERY PHASE (implementation/inference.py)"
         E[👤 User Question] --> F[📝 Combine with History<br/>Concatenate prior messages]
         F --> G[🔍 Vector Search<br/>Similarity: cosine<br/>Top K=10]
         D -.->|Retrieve| G

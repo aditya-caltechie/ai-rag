@@ -15,10 +15,10 @@ from evaluation.test import TestQuestion, load_tests
 
 # Dynamically import based on RAG_MODE
 if RAG_MODE == "basic":
-    from implementation.answer import answer_question, fetch_context
+    from implementation.inference import answer_question, fetch_context
     print("✓ Evaluation using Basic RAG (implementation/)")
 elif RAG_MODE == "pro":
-    from pro_implementation.answer import answer_question, fetch_context
+    from pro_implementation.inference import answer_question, fetch_context
     print("✓ Evaluation using Advanced RAG (pro_implementation/)")
 else:
     raise ValueError(f"Invalid RAG_MODE: {RAG_MODE}")

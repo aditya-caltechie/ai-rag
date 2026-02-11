@@ -36,11 +36,11 @@ class TestBasicRAGIngestionPipeline:
         
         shutil.rmtree(temp_dir)
     
-    @patch('implementation.ingest.Chroma')
-    @patch('implementation.ingest.OpenAIEmbeddings')
+    @patch('implementation.ingestion.Chroma')
+    @patch('implementation.ingestion.OpenAIEmbeddings')
     def test_full_ingestion_pipeline(self, mock_embeddings_class, mock_chroma_class, temp_kb_and_db):
         """Test complete ingestion: load → chunk → embed → store."""
-        from implementation import ingest
+        from implementation import ingestionion
         
         kb_dir, db_dir = temp_kb_and_db
         
@@ -59,26 +59,26 @@ class TestBasicRAGIngestionPipeline:
         mock_chroma_class.return_value = mock_store
         
         # Override paths
-        with patch.object(ingest, 'KNOWLEDGE_BASE', str(kb_dir)):
-            with patch.object(ingest, 'DB_NAME', str(db_dir)):
-                with patch.object(ingest, 'embeddings', mock_embeddings):
+        with patch.object(ingestion, 'KNOWLEDGE_BASE', str(kb_dir)):
+            with patch.object(ingestion, 'DB_NAME', str(db_dir)):
+                with patch.object(ingestion, 'embeddings', mock_embeddings):
                     # Run pipeline
-                    documents = ingest.fetch_documents()
+                    documents = ingestion.fetch_documents()
                     assert len(documents) > 0
                     
-                    chunks = ingest.create_chunks(documents)
+                    chunks = ingestion.create_chunks(documents)
                     assert len(chunks) > 0
                     assert len(chunks) >= len(documents)
                     
-                    vectorstore = ingest.create_embeddings(chunks)
+                    vectorstore = ingestion.create_embeddings(chunks)
                     assert vectorstore is not None
                     mock_chroma_class.from_documents.assert_called_once()
     
-    @patch('implementation.ingest.Chroma')
-    @patch('implementation.ingest.OpenAIEmbeddings')
+    @patch('implementation.ingestion.Chroma')
+    @patch('implementation.ingestion.OpenAIEmbeddings')
     def test_ingestion_preserves_metadata_through_pipeline(self, mock_embeddings_class, mock_chroma_class, temp_kb_and_db):
         """Test that metadata is preserved from documents → chunks → vector store."""
-        from implementation import ingest
+        from implementation import ingestion
         
         kb_dir, db_dir = temp_kb_and_db
         
@@ -93,10 +93,10 @@ class TestBasicRAGIngestionPipeline:
         mock_chroma_class.from_documents = MagicMock(return_value=mock_store)
         mock_chroma_class.return_value = mock_store
         
-        with patch.object(ingest, 'KNOWLEDGE_BASE', str(kb_dir)):
-            with patch.object(ingest, 'DB_NAME', str(db_dir)):
-                with patch.object(ingest, 'embeddings', mock_embeddings):
-                    documents = ingest.fetch_documents()
+        with patch.object(ingestion, 'KNOWLEDGE_BASE', str(kb_dir)):
+            with patch.object(ingestion, 'DB_NAME', str(db_dir)):
+                with patch.object(ingestion, 'embeddings', mock_embeddings):
+                    documents = ingestion.fetch_documents()
                     
                     # Verify documents have metadata
                     assert all('doc_type' in doc.metadata for doc in documents)
@@ -107,7 +107,7 @@ class TestBasicRAGIngestionPipeline:
                     assert all(hasattr(chunk, 'metadata') for chunk in chunks)
                     
                     # When creating embeddings, metadata should be passed
-                    ingest.create_embeddings(chunks)
+                    ingestion.create_embeddings(chunks)
                     call_args = mock_chroma_class.from_documents.call_args
                     stored_chunks = call_args.kwargs['documents']
                     assert all(hasattr(c, 'metadata') for c in stored_chunks)
@@ -116,11 +116,11 @@ class TestBasicRAGIngestionPipeline:
 class TestBasicRAGQueryPipeline:
     """Test complete query workflow."""
     
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.retriever')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.retriever')
     def test_full_query_pipeline(self, mock_retriever, mock_llm):
         """Test complete query: question → retrieve → generate answer."""
-        from implementation import answer
+        from implementation import inference
         
         # Mock retrieval
         mock_docs = [
@@ -136,7 +136,7 @@ class TestBasicRAGQueryPipeline:
         
         # Execute query
         question = "What is Insurellm?"
-        answer_text, retrieved_docs = answer.answer_question(question)
+        answer_text, retrieved_docs = inference.answer_question(question)
         
         # Verify pipeline
         assert answer_text == mock_response.content
@@ -152,11 +152,11 @@ class TestBasicRAGQueryPipeline:
         system_msg_content = str(call_args[0].content)
         assert "Insurellm is an insurance tech company" in system_msg_content
     
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.retriever')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.retriever')
     def test_query_pipeline_with_conversation_history(self, mock_retriever, mock_llm):
         """Test query pipeline with multi-turn conversation."""
-        from implementation import answer
+        from implementation import inference
         
         mock_retriever.invoke = MagicMock(return_value=[
             Mock(page_content="Avery Lancaster is the CEO.", metadata={"source": "leadership.md"})
@@ -186,13 +186,13 @@ class TestBasicRAGQueryPipeline:
 class TestBasicRAGEndToEnd:
     """End-to-end tests simulating real usage."""
     
-    @patch('implementation.ingest.Chroma')
-    @patch('implementation.ingest.OpenAIEmbeddings')
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.retriever')
+    @patch('implementation.ingestion.Chroma')
+    @patch('implementation.ingestion.OpenAIEmbeddings')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.retriever')
     def test_ingest_then_query(self, mock_retriever, mock_answer_llm, mock_ingest_embeddings, mock_ingest_chroma):
         """Test: ingest documents → query system → get answer."""
-        from implementation import ingest, answer
+        from implementation import ingestion, answer
         
         # Setup ingestion mocks
         temp_dir = Path(tempfile.mkdtemp())
@@ -214,10 +214,10 @@ class TestBasicRAGEndToEnd:
         
         # Run ingestion
         with patch.object(ingest, 'KNOWLEDGE_BASE', str(kb_dir)):
-            with patch.object(ingest, 'embeddings', mock_embeddings_inst):
-                docs = ingest.fetch_documents()
-                chunks = ingest.create_chunks(docs)
-                ingest.create_embeddings(chunks)
+            with patch.object(ingestion, 'embeddings', mock_embeddings_inst):
+                docs = ingestion.fetch_documents()
+                chunks = ingestion.create_chunks(docs)
+                ingestion.create_embeddings(chunks)
         
         # Setup query mocks
         mock_retriever.invoke = MagicMock(return_value=[
@@ -238,11 +238,11 @@ class TestBasicRAGEndToEnd:
         # Cleanup
         shutil.rmtree(temp_dir)
     
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.retriever')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.retriever')
     def test_multiple_queries_maintain_context(self, mock_retriever, mock_llm):
         """Test multiple queries building conversation context."""
-        from implementation import answer
+        from implementation import inference
         
         # Query 1
         mock_retriever.invoke = MagicMock(return_value=[
@@ -250,7 +250,7 @@ class TestBasicRAGEndToEnd:
         ])
         mock_llm.invoke = MagicMock(return_value=Mock(content="It's an insurance tech company."))
         
-        answer1, _ = answer.answer_question("What is Insurellm?")
+        answer1, _ = inference.answer_question("What is Insurellm?")
         history = [
             {"role": "user", "content": "What is Insurellm?"},
             {"role": "assistant", "content": answer1}
@@ -262,7 +262,7 @@ class TestBasicRAGEndToEnd:
         ])
         mock_llm.invoke = MagicMock(return_value=Mock(content="Avery Lancaster is the CEO."))
         
-        answer2, _ = answer.answer_question("Who is the CEO?", history)
+        answer2, _ = inference.answer_question("Who is the CEO?", history)
         
         # Verify history was used
         retriever_arg = mock_retriever.invoke.call_args[0][0]
@@ -275,10 +275,10 @@ class TestBasicRAGEndToEnd:
 class TestBasicRAGErrorHandling:
     """Test error handling in the pipeline."""
     
-    @patch('implementation.ingest.DirectoryLoader')
+    @patch('implementation.ingestion.DirectoryLoader')
     def test_ingestion_handles_empty_knowledge_base(self, mock_loader_class):
         """Test graceful handling of empty knowledge base."""
-        from implementation import ingest
+        from implementation import ingestion
         
         # Mock empty loader
         mock_loader = MagicMock()
@@ -290,8 +290,8 @@ class TestBasicRAGErrorHandling:
         kb_dir.mkdir()
         (kb_dir / "empty").mkdir()
         
-        with patch.object(ingest, 'KNOWLEDGE_BASE', str(kb_dir)):
-            documents = ingest.fetch_documents()
+            with patch.object(ingestion, 'KNOWLEDGE_BASE', str(kb_dir)):
+                documents = ingestion.fetch_documents()
             
             # Should return empty list, not crash
             assert isinstance(documents, list)
@@ -299,11 +299,11 @@ class TestBasicRAGErrorHandling:
         
         shutil.rmtree(temp_dir)
     
-    @patch('implementation.answer.retriever')
-    @patch('implementation.answer.llm')
+    @patch('implementation.inference.retriever')
+    @patch('implementation.inference.llm')
     def test_query_handles_no_relevant_context(self, mock_llm, mock_retriever):
         """Test handling when no relevant documents are found."""
-        from implementation import answer
+        from implementation import inference
         
         # Mock retriever returning empty results
         mock_retriever.invoke = MagicMock(return_value=[])

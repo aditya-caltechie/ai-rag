@@ -1,5 +1,5 @@
 """
-Unit tests for basic RAG answer pipeline (implementation/answer.py).
+Unit tests for basic RAG answer pipeline (implementation/inference.py).
 
 Tests retrieval, context combination, and answer generation without actual API calls.
 """
@@ -12,13 +12,13 @@ import sys
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src" / "rag-pipeline"))
 
-from implementation import answer
+from implementation import inference
 
 
 class TestFetchContext:
     """Test context retrieval functionality."""
     
-    @patch('implementation.answer.retriever')
+    @patch('implementation.inference.retriever')
     def test_fetch_context_returns_documents(self, mock_retriever):
         """Test that fetch_context returns list of documents."""
         mock_docs = [
@@ -33,7 +33,7 @@ class TestFetchContext:
         assert result[0].page_content == "Doc 1"
         mock_retriever.invoke.assert_called_once()
     
-    @patch('implementation.answer.retriever')
+    @patch('implementation.inference.retriever')
     def test_fetch_context_with_different_k(self, mock_retriever):
         """Test that fetch_context respects RETRIEVAL_K parameter."""
         mock_retriever.invoke = MagicMock(return_value=[Mock() for _ in range(10)])
@@ -95,8 +95,8 @@ class TestCombinedQuestion:
 class TestAnswerQuestion:
     """Test answer generation functionality."""
     
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.fetch_context')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.fetch_context')
     def test_answer_question_returns_tuple(self, mock_fetch, mock_llm):
         """Test that answer_question returns (answer, docs) tuple."""
         # Setup mocks
@@ -114,8 +114,8 @@ class TestAnswerQuestion:
         assert isinstance(result[0], str)  # Answer
         assert isinstance(result[1], list)  # Documents
     
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.fetch_context')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.fetch_context')
     def test_answer_question_uses_context(self, mock_fetch, mock_llm):
         """Test that retrieved context is used in LLM prompt."""
         mock_docs = [
@@ -137,8 +137,8 @@ class TestAnswerQuestion:
         system_message_content = str(call_args[0].content)
         assert "Insurellm is a tech company." in system_message_content
     
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.fetch_context')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.fetch_context')
     def test_answer_question_with_history(self, mock_fetch, mock_llm):
         """Test that conversation history is included in LLM messages."""
         mock_fetch.return_value = [Mock(page_content="Context", metadata={"source": "test.md"})]
@@ -152,7 +152,7 @@ class TestAnswerQuestion:
             {"role": "assistant", "content": "Previous answer"}
         ]
         
-        answer.answer_question("Current question", history)
+        inference.answer_question("Current question", history)
         
         # Verify LLM was called
         mock_llm.invoke.assert_called_once()
@@ -161,8 +161,8 @@ class TestAnswerQuestion:
         # Should have system message + history + current question
         assert len(call_args) >= 3
     
-    @patch('implementation.answer.llm')
-    @patch('implementation.answer.fetch_context')
+    @patch('implementation.inference.llm')
+    @patch('implementation.inference.fetch_context')
     def test_answer_question_returns_source_docs(self, mock_fetch, mock_llm):
         """Test that source documents are returned for citation."""
         mock_docs = [

@@ -17,7 +17,7 @@ Experimenting with different strategies to break down text into optimal segments
 
 #### Basic Implementation
 ```python
-# src/rag-pipeline/implementation/ingest.py
+# src/rag-pipeline/implementation/ingestion.py
 text_splitter = RecursiveCharacterTextSplitter(
     chunk_size=500,      # Fixed character count
     chunk_overlap=200    # 40% overlap for context preservation
@@ -29,7 +29,7 @@ chunks = text_splitter.split_documents(documents)
 
 #### Advanced Implementation (Pro)
 ```python
-# src/rag-pipeline/pro_implementation/ingest.py
+# src/rag-pipeline/pro_implementation/ingestion.py
 def make_prompt(document):
     """LLM-powered semantic chunking"""
     return f"""
@@ -132,7 +132,7 @@ Context:
 
 #### Advanced Implementation (Pro)
 ```python
-# src/rag-pipeline/pro_implementation/answer.py
+# src/rag-pipeline/pro_implementation/inference.py
 SYSTEM_PROMPT = """
 You are a knowledgeable, friendly assistant representing the company Insurellm.
 You are chatting with a user about Insurellm.
@@ -174,7 +174,7 @@ Using an LLM to clean, format, or enhance chunks and text specifically for bette
 
 #### Advanced Implementation (Pro)
 ```python
-# src/rag-pipeline/pro_implementation/ingest.py
+# src/rag-pipeline/pro_implementation/ingestion.py
 class Chunk(BaseModel):
     headline: str = Field(
         description="A brief heading for this chunk, typically a few words, 
@@ -240,7 +240,7 @@ Using an LLM to transform a user's natural language question into a more effecti
 
 #### Advanced Implementation (Pro)
 ```python
-# src/rag-pipeline/pro_implementation/answer.py
+# src/rag-pipeline/pro_implementation/inference.py
 @retry(wait=wait)
 def rewrite_query(question, history=[]):
     """Rewrite the user's question to be a more specific question that is 
@@ -303,7 +303,7 @@ Using an LLM to generate multiple RAG queries from a single question to broaden 
 While not explicitly generating multiple query variants, the advanced implementation achieves similar benefits through dual retrieval:
 
 ```python
-# src/rag-pipeline/pro_implementation/answer.py
+# src/rag-pipeline/pro_implementation/inference.py
 def fetch_context(original_question):
     """Multi-query approach"""
     # Query 1: Original user question
@@ -378,7 +378,7 @@ Employing an LLM to sub-select or re-order the most relevant results from the in
 
 #### Advanced Implementation (Pro)
 ```python
-# src/rag-pipeline/pro_implementation/answer.py
+# src/rag-pipeline/pro_implementation/inference.py
 class RankOrder(BaseModel):
     order: list[int] = Field(
         description="The order of relevance of chunks, from most relevant to 

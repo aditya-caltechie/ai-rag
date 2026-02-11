@@ -2,7 +2,7 @@
 
 ```mermaid
 graph TB
-    subgraph "INGESTION PHASE (pro_implementation/ingest.py)"
+    subgraph "INGESTION PHASE (pro_implementation/ingestion.py)"
         A[📄 Load Documents<br/>Markdown Files] --> B[🤖 LLM Chunking<br/>GPT-4.1-nano intelligently splits<br/>25% overlap, semantic boundaries]
         B --> C[✨ Enhance Chunks<br/>Add Headline + Summary + Original Text<br/>for each chunk]
         C --> D[🧮 Generate Embeddings<br/>OpenAI text-embedding-3-large]
@@ -11,7 +11,7 @@ graph TB
         B -.-> F[⚙️ Parallel Processing<br/>3 workers<br/>+ retry logic]
     end
     
-    subgraph "QUERY PHASE (pro_implementation/answer.py)"
+    subgraph "QUERY PHASE (pro_implementation/inference.py)"
         G[👤 User Question] --> H[🔄 Query Rewriting<br/>LLM refines question<br/>for better retrieval]
         
         H --> I1[🔍 Vector Search #1<br/>Original Question<br/>Top K=20]

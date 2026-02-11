@@ -1,5 +1,5 @@
 """
-Unit tests for basic RAG ingestion pipeline (implementation/ingest.py).
+Unit tests for basic RAG ingestion pipeline (implementation/ingestion.py).
 
 Tests document loading, chunking, and embedding creation without actual API calls.
 """
@@ -12,7 +12,7 @@ import sys
 # Add src directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src" / "rag-pipeline"))
 
-from implementation import ingest
+from implementation import ingestionion
 
 
 class TestFetchDocuments:
@@ -21,7 +21,7 @@ class TestFetchDocuments:
     def test_fetch_documents_with_sample_kb(self, sample_knowledge_base):
         """Test that fetch_documents loads markdown files correctly."""
         with patch.object(ingest, 'KNOWLEDGE_BASE', str(sample_knowledge_base)):
-            with patch('implementation.ingest.DirectoryLoader') as mock_loader_class:
+            with patch('implementation.ingestion.DirectoryLoader') as mock_loader_class:
                 # Mock the DirectoryLoader to return sample documents
                 mock_loader = MagicMock()
                 mock_doc1 = Mock()
@@ -44,7 +44,7 @@ class TestFetchDocuments:
     def test_fetch_documents_sets_doc_type(self, sample_knowledge_base):
         """Test that documents have correct doc_type metadata."""
         with patch.object(ingest, 'KNOWLEDGE_BASE', str(sample_knowledge_base)):
-            with patch('implementation.ingest.DirectoryLoader') as mock_loader_class:
+            with patch('implementation.ingestion.DirectoryLoader') as mock_loader_class:
                 mock_loader = MagicMock()
                 mock_doc = Mock()
                 mock_doc.metadata = {}
@@ -108,8 +108,8 @@ class TestCreateChunks:
 class TestCreateEmbeddings:
     """Test embedding creation and vector store functionality."""
     
-    @patch('implementation.ingest.Chroma')
-    @patch('implementation.ingest.os.path.exists')
+    @patch('implementation.ingestion.Chroma')
+    @patch('implementation.ingestion.os.path.exists')
     def test_create_embeddings_deletes_existing_db(self, mock_exists, mock_chroma_class):
         """Test that existing database is deleted before creating new one."""
         mock_exists.return_value = True
@@ -133,13 +133,13 @@ class TestCreateEmbeddings:
         mock_chunk.page_content = "Test content"
         mock_chunk.metadata = {"source": "test.md"}
         
-        ingest.create_embeddings([mock_chunk])
+        ingestion.create_embeddings([mock_chunk])
         
         # Verify delete was called
         mock_store.delete_collection.assert_called_once()
     
-    @patch('implementation.ingest.Chroma')
-    @patch('implementation.ingest.os.path.exists')
+    @patch('implementation.ingestion.Chroma')
+    @patch('implementation.ingestion.os.path.exists')
     def test_create_embeddings_creates_vector_store(self, mock_exists, mock_chroma_class):
         """Test that vector store is created with chunks."""
         mock_exists.return_value = False
@@ -161,8 +161,8 @@ class TestCreateEmbeddings:
         assert result is not None
         mock_chroma_class.from_documents.assert_called_once()
     
-    @patch('implementation.ingest.Chroma')
-    @patch('implementation.ingest.os.path.exists')
+    @patch('implementation.ingestion.Chroma')
+    @patch('implementation.ingestion.os.path.exists')
     def test_create_embeddings_prints_summary(self, mock_exists, mock_chroma_class, capsys):
         """Test that embedding creation prints summary statistics."""
         mock_exists.return_value = False
@@ -178,7 +178,7 @@ class TestCreateEmbeddings:
         mock_chroma_class.from_documents = MagicMock(return_value=mock_store)
         
         mock_chunk = Mock(page_content="Test", metadata={"source": "test.md"})
-        ingest.create_embeddings([mock_chunk])
+        ingestion.create_embeddings([mock_chunk])
         
         captured = capsys.readouterr()
         assert "100" in captured.out
@@ -188,9 +188,9 @@ class TestCreateEmbeddings:
 class TestIntegration:
     """Integration tests for the complete ingestion pipeline."""
     
-    @patch('implementation.ingest.create_embeddings')
-    @patch('implementation.ingest.create_chunks')
-    @patch('implementation.ingest.fetch_documents')
+    @patch('implementation.ingestion.create_embeddings')
+    @patch('implementation.ingestion.create_chunks')
+    @patch('implementation.ingestion.fetch_documents')
     def test_full_pipeline_integration(self, mock_fetch, mock_chunk, mock_embed):
         """Test that the full pipeline runs without errors."""
         # Setup mocks

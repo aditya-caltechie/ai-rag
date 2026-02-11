@@ -15,19 +15,18 @@ With RAG → LLM gets fresh/private/company-specific context on every question
 
 It refers to all the engineering work needed to run a RAG system reliably in production, not just in a Jupyter notebook or local demo. This usually includes most or all of these aspects:
 
-```
-Area,"What ""deployment"" typically involves",Why it's hard / important
-Ingestion pipeline,PDF → text → chunking → embedding creation → vector DB upsert (ongoing / incremental updates),"Data freshness, deduplication, handling updates/deletes"
-Vector database,"Choose & operate Pinecone, Weaviate, Qdrant, pgvector, Elasticsearch, Redis, Astra DB, etc.","Latency, scale, hybrid search, metadata filtering"
-Retrieval logic,"Hybrid search (dense + sparse), reranking (cross-encoder / LLM reranker), query rewriting/expansion",Recall & precision — bad retrieval = bad answers
-Prompt engineering,Good system prompt + context formatting + citation instructions,"Reduces hallucinations, improves answer quality"
-LLM inference,"Hosting OpenAI, Anthropic, Grok, Llama-3.1/DeepSeek, Mistral, etc. (self-hosted or API)","Cost, speed, rate limits, fallback models"
-Serving layer,FastAPI / LangServe / Haystack / LlamaIndex Serve / BentoML / vLLM + streaming,"Low latency, concurrency, rate limiting"
-Monitoring & eval,"Answer quality (RAGAS, DeepEval), retrieval metrics (nDCG, recall@k), hallucinations, latency",You cannot improve what you don't measure
-Security,"AuthN/AuthZ, data isolation, PII redaction, prompt injection defense",Enterprise must-have
-Freshness pipeline,"Real-time / near real-time updates (webhooks, CDC, scheduled jobs)",Stale data = outdated answers
-Cost & scaling,"Auto-scaling, caching (semantic cache), query classification (some questions don't need RAG)",Production bills can explode quickly
-```
+| Area | What "deployment" typically involves | Why it's hard / important |
+|------|--------------------------------------|---------------------------|
+| Ingestion pipeline | PDF → text → chunking → embedding creation → vector DB upsert (ongoing / incremental updates) | Data freshness, deduplication, handling updates/deletes |
+| Vector database | Choose & operate Pinecone, Weaviate, Qdrant, pgvector, Elasticsearch, Redis, Astra DB, etc. | Latency, scale, hybrid search, metadata filtering |
+| Retrieval logic | Hybrid search (dense + sparse), reranking (cross-encoder / LLM reranker), query rewriting/expansion | Recall & precision — bad retrieval = bad answers |
+| Prompt engineering | Good system prompt + context formatting + citation instructions | Reduces hallucinations, improves answer quality |
+| LLM inference | Hosting OpenAI, Anthropic, Grok, Llama-3.1/DeepSeek, Mistral, etc. (self-hosted or API) | Cost, speed, rate limits, fallback models |
+| Serving layer | FastAPI / LangServe / Haystack / LlamaIndex Serve / BentoML / vLLM + streaming | Low latency, concurrency, rate limiting |
+| Monitoring & eval | Answer quality (RAGAS, DeepEval), retrieval metrics (nDCG, recall@k), hallucinations, latency | You cannot improve what you don't measure |
+| Security | AuthN/AuthZ, data isolation, PII redaction, prompt injection defense | Enterprise must-have |
+| Freshness pipeline | Real-time / near real-time updates (webhooks, CDC, scheduled jobs) | Stale data = outdated answers |
+| Cost & scaling | Auto-scaling, caching (semantic cache), query classification (some questions don't need RAG) | Production bills can explode quickly |
 
 ## Quick summary table of stages people actually use
 
@@ -91,7 +90,15 @@ API layer — FastAPI / LitServe / LangServe / BentoML
 LLM backend — vLLM / TGI / SGLang / LMDeploy (for self-hosted) + autoscaling
 Or managed: OpenAI / Anthropic / Grok / Fireworks / Together
 
-Vector DB choice (pick one and commit)ScenarioRecommendation (2026)Why< 1M vectors, simplepgvector / Chroma persistentCheap, easy1M–50M, high QPSQdrant / Weaviate / MilvusGood hybrid + filtering + speedServerless / very largePinecone serverless / ZillizZero ops, auto-scaleAlready on cloud DBMongoDB Atlas / Redis / ElasticLeverage existing infra
+Vector DB choice (pick one and commit)
+
+| Scenario | Recommendation (2026) | Why |
+|----------|------------------------|-----|
+| < 1M vectors, simple | pgvector / Chroma persistent | Cheap, easy |
+| 1M–50M, high QPS | Qdrant / Weaviate / Milvus | Good hybrid + filtering + speed |
+| Serverless / very large | Pinecone serverless / Zilliz | Zero ops, auto-scale |
+| Already on cloud DB | MongoDB Atlas / Redis / Elastic | Leverage existing infra |
+
 Caching — exact semantic cache (Redis / GPTCache) + exact-match cache
 Rate limiting + query classification (avoid RAG on chit-chat)
 

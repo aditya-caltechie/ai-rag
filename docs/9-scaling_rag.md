@@ -119,11 +119,11 @@ CI/CD for RAG — prompt versioned, eval runs on PRs, regression tests
 
 ### 6. Security, Compliance & Cost Control
 
-AuthN/Z (JWT / OAuth)
-PII redaction / guardrails (Nemo Guardrails / Lakera / Patronus)
-Data residency / encryption at rest
-Cost — semantic cache hit rate > 40%, route easy questions away from RAG+LLM
-Auto-scaling groups + spot instances where possible
+- AuthN/Z (JWT / OAuth)
+- PII redaction / guardrails (Nemo Guardrails / Lakera / Patronus)
+- Data residency / encryption at rest
+- Cost — semantic cache hit rate > 40%, route easy questions away from RAG+LLM
+- Auto-scaling groups + spot instances where possible
 
 ### Typical Progression Timeline (real teams in 2025–2026)
 

@@ -29,12 +29,15 @@ It refers to all the engineering work needed to run a RAG system reliably in pro
 | Freshness pipeline | Real-time / near real-time updates (webhooks, CDC, scheduled jobs) | Stale data = outdated answers |
 | Cost & scaling | Auto-scaling, caching (semantic cache), query classification (some questions don't need RAG) | Production bills can explode quickly |
 
+Gradio UI + Ollama / vLLM is usually the "demo / prototype / local playground" stage, not what most people mean by "RAG deployment" in serious discussions (blogs, conferences, job interviews, engineering teams, etc.).
+Let me break it down clearly so the difference clicks:
+
 ## Quick summary table of stages people actually use
 
-Stage 0 — Notebook hell (LangChain / LlamaIndex notebook)
-Stage 1 — Local demo (exactly what you described: Gradio / Streamlit + Ollama / local vLLM + Chroma / FAISS)
-Stage 2 — "Internal tool" deployment (Docker Compose + vLLM + persistent vector DB + simple auth)
-Stage 3 — Production / "real" RAG deployment (cloud-native, scalable, observable, monitored, secure, continuously updated data)
+- Stage 0 — Notebook hell (LangChain / LlamaIndex notebook)
+- Stage 1 — Local demo (exactly what you described: Gradio / Streamlit + Ollama / local vLLM + Chroma / FAISS)
+- Stage 2 — "Internal tool" deployment (Docker Compose + vLLM + persistent vector DB + simple auth)
+- Stage 3 — Production / "real" RAG deployment (cloud-native, scalable, observable, monitored, secure, continuously updated data)
 
 When engineers / companies say "we deployed RAG" or "RAG deployment is hard", they almost always mean stage 3, not stage 1.
 Gradio + Ollama is fantastic for getting started fast and validating the idea (many production systems began exactly like that!), but it's rarely kept as-is when real people start depending on it.

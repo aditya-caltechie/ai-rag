@@ -249,3 +249,5 @@ Final Answer (+ sources / confidence)
 - Agentic flows (query routing, fallback to web search)
 - Evaluation loop (RAGAS, TruLens, DeepEval)
 
+## Aditional reference repo
+- https://github.com/aditya-caltechie/ai-langchain-basics

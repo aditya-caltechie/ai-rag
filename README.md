@@ -250,4 +250,4 @@ Final Answer (+ sources / confidence)
 - Evaluation loop (RAGAS, TruLens, DeepEval)
 
 ## Aditional reference repo
-- https://github.com/aditya-caltechie/ai-langchain-basics
+- https://github.com/aditya-caltechie/ai-langchain-intro

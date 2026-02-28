@@ -251,3 +251,4 @@ Final Answer (+ sources / confidence)
 
 ## Aditional reference repo
 - https://github.com/aditya-caltechie/ai-langchain-intro
+- https://github.com/aditya-caltechie/rag-projects/tree/main
